@@ -481,5 +481,4 @@ function closeModal() {
   document.body.style.overflow = '';
 }
 
-/* ─── Start ──────────────────────────────────────────────────── */
-document.addEventListener('DOMContentLoaded', init);
+/* init() es llamado por auth.js vía requireAuth() */

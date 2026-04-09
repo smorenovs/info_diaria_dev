@@ -4,7 +4,7 @@ let dirHandle = null;
 let state = { date: todayStr(), developers: [] };
 
 /* ─── Init ──────────────────────────────────────────────────── */
-document.addEventListener('DOMContentLoaded', () => {
+function editorInit() {
   document.getElementById('date-input').value = todayStr();
   document.getElementById('date-input').addEventListener('change', e => {
     state.date = e.target.value;
@@ -18,6 +18,14 @@ document.addEventListener('DOMContentLoaded', () => {
   // Iniciar con devs vacíos (plantilla)
   loadTemplate();
   updatePreview();
+}
+
+requireAuth(() => {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', editorInit);
+  } else {
+    editorInit();
+  }
 });
 
 function todayStr() {

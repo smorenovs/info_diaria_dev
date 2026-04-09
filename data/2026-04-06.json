@@ -29,7 +29,13 @@
         { "id": "TAREA 304", "title": "Estructura de Profesionales", "reason": "No funciona la herramienta de modelado" },
         { "id": "TAREA 165", "title": "Ingreso Stock", "reason": "Dependiente de integrar ZIA con Ingreso de Stock" }
       ],
-      "proximas": []
+      "proximas": [],
+      "terminadas": [
+        {
+          "id": "TAREA 440",
+          "title": "WoowUp - Reenvío de datos"
+        }
+      ]
     },
     {
       "name": "MARIANO",

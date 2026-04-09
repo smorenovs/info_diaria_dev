@@ -1,0 +1,50 @@
+{
+  "date": "2026-04-07",
+  "developers": [
+    {
+      "name": "AGUSTIN",
+      "en_curso": [],
+      "pausadas": [],
+      "bloqueadas": [],
+      "proximas": [],
+      "testing": [],
+      "terminadas": []
+    },
+    {
+      "name": "EXEQUIEL",
+      "en_curso": [],
+      "pausadas": [],
+      "bloqueadas": [],
+      "proximas": [],
+      "testing": [],
+      "terminadas": []
+    },
+    {
+      "name": "MARIANO",
+      "en_curso": [],
+      "pausadas": [],
+      "bloqueadas": [],
+      "proximas": [],
+      "testing": [],
+      "terminadas": [
+        {
+          "id": "TAREA 255",
+          "title": "Pedidos Manuales"
+        },
+        {
+          "id": "TAREA 451",
+          "title": "Pedido Centralizado - Opcion de Criterio de generacion x Ventas Anteriores"
+        }
+      ]
+    },
+    {
+      "name": "MAURICIO",
+      "en_curso": [],
+      "pausadas": [],
+      "bloqueadas": [],
+      "proximas": [],
+      "testing": [],
+      "terminadas": []
+    }
+  ]
+}
