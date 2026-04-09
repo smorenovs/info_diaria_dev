@@ -1,0 +1,71 @@
+{
+  "date": "2026-04-06",
+  "developers": [
+    {
+      "name": "AGUSTIN",
+      "en_curso": [
+        { "id": "TAREA 237", "title": "ABM de Entidades Prestadoras", "tag": "CMC" },
+        { "id": "TAREA 231", "title": "Zafiro Validadores" }
+      ],
+      "pausadas": [],
+      "bloqueadas": [],
+      "proximas": [
+        { "id": "TAREA 452", "title": "Mejora de Mensajes en Actualización de Precios AlfaBeta" },
+        { "id": "TAREA 247", "title": "Laboratorios mal asignados en AlfaBeta" },
+        { "id": "TAREA 328", "title": "Documentación ZIA" }
+      ]
+    },
+    {
+      "name": "EXEQUIEL",
+      "en_curso": [
+        { "id": "TAREA 405", "title": "Escaneo Auxiliar - Ingreso de Stock" },
+        { "id": "TAREA 402", "title": "Integración con WIBI" }
+      ],
+      "pausadas": [
+        { "id": "TAREA 302", "title": "Licitaciones Droguerías", "reason": "Se deben revisar nuevos requerimientos" },
+        { "id": "TAREA 300", "title": "Manejo de entornos en gerenciadoras", "reason": "Pausado para dar prioridad a resolución de problemas con etiquetas" }
+      ],
+      "bloqueadas": [
+        { "id": "TAREA 304", "title": "Estructura de Profesionales", "reason": "No funciona la herramienta de modelado" },
+        { "id": "TAREA 165", "title": "Ingreso Stock", "reason": "Dependiente de integrar ZIA con Ingreso de Stock" }
+      ],
+      "proximas": []
+    },
+    {
+      "name": "MARIANO",
+      "en_curso": [
+        { "id": "TAREA 451", "title": "Pedido Centralizado" },
+        { "id": "TAREA 255", "title": "Pedidos Manuales" }
+      ],
+      "pausadas": [
+        { "id": "TAREA 64", "title": "Compra Inteligente Multiproveedor Etapa 1", "reason": "" }
+      ],
+      "bloqueadas": [
+        { "id": "TAREA 67", "title": "Resumen de Compras por Proveedor", "reason": "" },
+        { "id": "TAREA 75", "title": "Reporte de Cantidad de Comprobantes por dia y hora", "reason": "" }
+      ],
+      "proximas": [
+        { "id": "TAREA 426", "title": "Mejorar cambio de estado en auditoría de cupones" },
+        { "id": "TAREA 424", "title": "Error en emisión de reporte de Resumen de Cuentas E.C." },
+        { "id": "TAREA 423", "title": "Apaisar texto formato 8 de cenefas" }
+      ]
+    },
+    {
+      "name": "MAURICIO",
+      "en_curso": [
+        { "id": "TAREA 450", "title": "Mostrar dtos. en ventas de unidades en Zafiro BI" },
+        { "id": "TAREA 379", "title": "Correción en SVC" },
+        { "id": "TAREA 240", "title": "ABM de Obras Sociales" }
+      ],
+      "pausadas": [],
+      "bloqueadas": [
+        { "id": "TAREA 273", "title": "BI - Resumen Ventas-Stock", "reason": "Dependencia directa con TAREA 379" }
+      ],
+      "proximas": [
+        { "id": "TAREA 438", "title": "Servicio de Comunicaciones - Subida AWS" },
+        { "id": "TAREA 285", "title": "Notificación finalización de recarga de datos Zafiro BI" },
+        { "id": "TAREA 384", "title": "Error en los ordenamientos del reporte Resumen de Ventas por Vendedor/Articulos" }
+      ]
+    }
+  ]
+}

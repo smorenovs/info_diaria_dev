@@ -1,0 +1,239 @@
+{
+  "date": "2026-04-08",
+  "developers": [
+    {
+      "name": "AGUSTIN",
+      "en_curso": [
+        {
+          "id": "TAREA 237",
+          "title": "ABM de Entidades Prestadoras",
+          "tag": "CMC"
+        }
+      ],
+      "pausadas": [],
+      "bloqueadas": [],
+      "proximas": [
+        {
+          "id": "TAREA 429",
+          "title": "Integración Drubbit"
+        },
+        {
+          "id": "TAREA 328",
+          "title": "Documentación ZIA"
+        }
+      ],
+      "testing": [
+        {
+          "id": "TAREA 231",
+          "title": "Zafiro Validadores"
+        },
+        {
+          "id": "TAREA 247",
+          "title": "Laboratorios mal asignados en AlfaBeta"
+        },
+        {
+          "id": "TAREA 452",
+          "title": "Mejora de Mensajes en Actualización de Precios AlfaBeta"
+        },
+        {
+          "id": "TAREA 241",
+          "title": "CMC - ABM Masivo Nomencladores"
+        },
+        {
+          "id": "TAREA 238",
+          "title": "CMC - ABM Nomencladores normal"
+        }
+      ],
+      "terminadas": []
+    },
+    {
+      "name": "EXEQUIEL",
+      "en_curso": [
+        {
+          "id": "TAREA 402",
+          "title": "Integración con WIBI"
+        }
+      ],
+      "pausadas": [
+        {
+          "id": "TAREA 302",
+          "title": "Licitaciones Droguerías",
+          "reason": "Se deben revisar nuevos requerimientos"
+        },
+        {
+          "id": "TAREA 300",
+          "title": "Manejo de entornos en gerenciadoras",
+          "reason": "Pausado para dar prioridad a resolución de problemas con etiquetas"
+        }
+      ],
+      "bloqueadas": [
+        {
+          "id": "TAREA 304",
+          "title": "Estructura de Profesionales",
+          "reason": "No funciona la herramienta de modelado"
+        },
+        {
+          "id": "TAREA 165",
+          "title": "Ingreso Stock",
+          "reason": "Dependiente de integrar ZIA con Ingreso de Stock"
+        }
+      ],
+      "proximas": [
+        {
+          "id": "TAREA 445",
+          "title": "Reporte de venta por Cliente Fid"
+        },
+        {
+          "id": "TAREA 406",
+          "title": "Integración con AKERON"
+        },
+        {
+          "id": "TAREA 355",
+          "title": "Etiquetas - Precios Sin Descuento"
+        }
+      ],
+      "testing": [
+        {
+          "id": "TAREA 405",
+          "title": "Escaneo Auxiliar - Ingreso de Stock"
+        }
+      ],
+      "terminadas": []
+    },
+    {
+      "name": "MARIANO",
+      "en_curso": [
+        {
+          "id": "TAREA 458",
+          "title": "Actualización de Precios - (Costo de Reposic.)"
+        }
+      ],
+      "pausadas": [
+        {
+          "id": "TAREA 64",
+          "title": "Compra Inteligente Multiproveedor Etapa 1",
+          "reason": "Muy larga, se priorizan otras tareas"
+        }
+      ],
+      "bloqueadas": [
+        {
+          "id": "TAREA 67",
+          "title": "Resumen de Compras por Proveedor",
+          "reason": ""
+        },
+        {
+          "id": "TAREA 75",
+          "title": "Reporte de Cantidad de Comprobantes por dia y hora",
+          "reason": "Se necesita una VPN con La Pirgua"
+        }
+      ],
+      "proximas": [
+        {
+          "id": "TAREA 424",
+          "title": "Error en emisión de reporte de Resumen de Cuentas E.C."
+        },
+        {
+          "id": "TAREA 423",
+          "title": "Apaisar texto formato 8 de cenefas"
+        },
+        {
+          "id": "TAREA 426",
+          "title": "Mejorar cambio de estado en auditoría de cupones"
+        }
+      ],
+      "testing": [],
+      "terminadas": [
+        {
+          "id": "TAREA 451",
+          "title": "Pedido Centralizado"
+        },
+        {
+          "id": "TAREA 255",
+          "title": "Pedidos Manuales"
+        }
+      ]
+    },
+    {
+      "name": "MAURICIO",
+      "en_curso": [
+        {
+          "id": "TAREA 450",
+          "title": "Mostrar dtos. en ventas de unidades en Zafiro BI"
+        },
+        {
+          "id": "TAREA 379",
+          "title": "Correción en SVC"
+        },
+        {
+          "id": "TAREA 240",
+          "title": "ABM de Obras Sociales"
+        }
+      ],
+      "pausadas": [],
+      "bloqueadas": [
+        {
+          "id": "TAREA 273",
+          "title": "BI - Resumen Ventas-Stock",
+          "reason": "Dependencia directa con TAREA 379"
+        }
+      ],
+      "proximas": [
+        {
+          "id": "TAREA 438",
+          "title": "Servicio de Comunicaciones - Subida AWS"
+        },
+        {
+          "id": "TAREA 285",
+          "title": "Notificación finalización de recarga de datos Zafiro BI"
+        },
+        {
+          "id": "TAREA 384",
+          "title": "Error en los ordenamientos del reporte Resumen de Ventas por Vendedor/Articulos"
+        }
+      ],
+      "testing": [
+        {
+          "id": "TAREA 106",
+          "title": "Datos incompletos en la carga diaria de datos al BI"
+        }
+      ],
+      "terminadas": []
+    },
+    {
+      "name": "PABLO",
+      "en_curso": [
+        {
+          "id": "TAREA 405",
+          "title": "Permitir recibir como forma de pago de una entidad debito varias facturas en una misma operación"
+        },
+        {
+          "id": "TAREA 184",
+          "title": "Z129 - Tiendastic - Bajada por Intercambio de Archivos"
+        }
+      ],
+      "pausadas": [],
+      "bloqueadas": [],
+      "proximas": [
+        {
+          "id": "TAREA 466",
+          "title": "formato de los archivos de exportacion de Percepciones y Retenciones de IIBB"
+        },
+        {
+          "id": "TAREA 460",
+          "title": "Reglas de Promoción - Ecommerce"
+        },
+        {
+          "id": "TAREA 462",
+          "title": "Reglas de Promoción - Facturación en Tienda Física"
+        }
+      ],
+      "testing": [
+        {
+          "id": "TAREA 333",
+          "title": "Problemas con 2 notas de crédito realizadas a un solo comprobante"
+        }
+      ],
+      "terminadas": []
+    }
+  ]
+}

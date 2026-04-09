@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editor de Estado Diario — VS Ingeniería</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    /* ── Editor-specific styles ── */
+    .editor-topbar {
+      height: 64px;
+      background: rgba(11,30,39,0.92);
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(251,191,36,0.20);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--space-6);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      gap: var(--space-4);
+    }
+
+    .local-badge {
+      background: rgba(251,191,36,0.15);
+      color: #FBBF24;
+      border: 1px solid rgba(251,191,36,0.30);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+    }
+
+    .editor-layout {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: var(--space-5);
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: var(--space-5) var(--space-6);
+      align-items: start;
+    }
+
+    @media (max-width: 1024px) {
+      .editor-layout { grid-template-columns: 1fr; }
+      .preview-panel { display: none; }
+    }
+
+    /* Control bar */
+    .control-bar {
+      background: var(--layer-3);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4) var(--space-5);
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      flex-wrap: wrap;
+      margin-bottom: var(--space-4);
+    }
+
+    .control-bar .btn-connect {
+      background: rgba(77,200,232,0.10);
+      color: var(--vs-cyan);
+      border: 1.5px solid rgba(77,200,232,0.30);
+    }
+    .control-bar .btn-connect:hover { background: rgba(77,200,232,0.20); }
+
+    #status-bar {
+      font-size: 11px;
+      color: var(--vs-gray-dark);
+      margin-left: auto;
+    }
+
+    /* Dev block */
+    .dev-block {
+      background: var(--layer-3);
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--space-4);
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .dev-block-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      background: var(--layer-2);
+      border-bottom: 1px solid rgba(77,200,232,0.10);
+    }
+
+    .dev-block-body {
+      padding: var(--space-4);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+      transition: max-height 0.25s, opacity 0.25s;
+    }
+
+    .dev-block-body.collapsed {
+      display: none;
+    }
+
+    /* Section block */
+    .section-block { display: flex; flex-direction: column; gap: var(--space-2); }
+
+    .section-block-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-1);
+    }
+
+    /* Task input row */
+    .task-input-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+    }
+
+    /* Preview */
+    .preview-panel {
+      position: sticky;
+      top: 80px;
+      background: var(--layer-2);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(77,200,232,0.12);
+      overflow: hidden;
+    }
+
+    .preview-header {
+      padding: var(--space-3) var(--space-4);
+      background: var(--layer-1);
+      border-bottom: 1px solid rgba(77,200,232,0.10);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--vs-gray-mid);
+    }
+
+    #json-preview {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 11px;
+      line-height: 1.6;
+      color: var(--vs-cyan);
+      background: transparent;
+      padding: var(--space-4);
+      overflow: auto;
+      max-height: calc(100vh - 160px);
+      white-space: pre;
+    }
+
+    /* Toast container */
+    #toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: flex-end;
+    }
+
+    .toast {
+      background: var(--layer-3);
+      border: 1px solid rgba(77,200,232,0.20);
+      border-radius: var(--radius-md);
+      padding: 12px 18px;
+      font-size: 13px;
+      color: var(--vs-text);
+      box-shadow: var(--shadow-lg);
+      min-width: 260px;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.25s, transform 0.25s;
+      border-left: 4px solid var(--vs-teal);
+    }
+
+    .toast.toast-show { opacity: 1; transform: translateY(0); }
+    .toast.toast-success { border-left-color: #4ADE80; }
+    .toast.toast-error   { border-left-color: #F87171; }
+
+    /* Small button variants */
+    .btn-sm { padding: 5px 10px; font-size: 12px; }
+    .btn-xs { padding: 3px 8px;  font-size: 11px; }
+
+    /* Dev actions right-aligned */
+    .dev-block-header .btn-remove-dev,
+    .dev-block-header .btn-toggle-dev {
+      margin-left: auto;
+    }
+    .dev-block-header .btn-toggle-dev { margin-left: 0; }
+
+    /* Add developer button area */
+    .add-dev-area {
+      text-align: center;
+      padding: var(--space-4) 0;
+    }
+
+    /* Help text */
+    .help-text {
+      font-size: 12px;
+      color: var(--vs-gray-dark);
+      line-height: 1.5;
+      background: rgba(77,200,232,0.05);
+      border: 1px solid rgba(77,200,232,0.10);
+      border-radius: var(--radius-md);
+      padding: var(--space-3) var(--space-4);
+      margin-bottom: var(--space-4);
+    }
+
+    .help-text strong { color: var(--vs-cyan); }
+  </style>
+</head>
+<body class="bg-pattern">
+
+  <!-- Topbar del editor -->
+  <header class="editor-topbar">
+    <div class="topbar-brand">
+      <div class="topbar-logo">VS</div>
+      <div>
+        <div class="topbar-title">Editor de Estado Diario</div>
+        <div class="topbar-subtitle">Uso local — no se despliega en GitHub Pages</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <span class="local-badge">USO LOCAL</span>
+      <a href="index.html" class="btn btn-ghost btn-sm">Ver Dashboard →</a>
+    </div>
+  </header>
+
+  <!-- Layout principal -->
+  <div class="editor-layout">
+
+    <!-- Columna izquierda: formulario -->
+    <div>
+      <div class="help-text">
+        <strong>Flujo de uso:</strong>
+        1. Seleccioná la fecha del día.
+        2. Hacé clic en <strong>Conectar carpeta</strong> y seleccioná la carpeta <code>data/</code> del repositorio.
+        3. Usá <strong>Copiar día anterior</strong> para cargar los datos del día previo como base.
+        4. Editá lo que cambió y hacé clic en <strong>Guardar JSON</strong>.
+        5. Hacé <code>git push</code> para publicar.
+      </div>
+
+      <!-- Barra de control -->
+      <div class="control-bar">
+        <label class="label control-bar-label" for="date-input">Fecha del día</label>
+        <input class="input control-bar-date" type="date" id="date-input">
+
+        <button type="button" class="btn btn-connect" id="btn-connect">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+          </svg>
+          Conectar carpeta
+        </button>
+
+        <button type="button" class="btn btn-secondary btn-sm" id="btn-recover">
+          ↩ Recuperar tareas de ayer
+        </button>
+
+        <button type="button" class="btn btn-primary btn-sm" id="btn-save" disabled>
+          ↓ Guardar JSON
+        </button>
+
+        <span id="status-bar">Sin carpeta conectada</span>
+      </div>
+
+      <!-- Formulario de devs -->
+      <div id="devs-form">
+        <!-- Generado por editor.js -->
+      </div>
+
+      <div class="add-dev-area">
+        <button type="button" class="btn btn-ghost" id="btn-add-dev">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Agregar Desarrollador
+        </button>
+      </div>
+    </div>
+
+    <!-- Columna derecha: preview del JSON -->
+    <div class="preview-panel">
+      <div class="preview-header">Preview JSON</div>
+      <pre id="json-preview"></pre>
+    </div>
+
+  </div>
+
+  <!-- Toast notifications -->
+  <div id="toast-container"></div>
+
+  <script src="js/editor.js"></script>
+</body>
+</html>

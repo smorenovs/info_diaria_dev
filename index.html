@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estado del Equipo — VS Ingeniería</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-pattern">
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <a class="topbar-brand" href="#">
+      <div class="topbar-logo-wrap">
+        <img src="assets/media/logo_vs.png" alt="VS" class="topbar-logo-img">
+      </div>
+      <div>
+        <div class="topbar-title">VS Ingeniería en Sistemas</div>
+        <div class="topbar-subtitle">Estado del Equipo de Desarrollo</div>
+      </div>
+    </a>
+    <div class="topbar-right">
+      <span id="last-update" class="topbar-date-label">Cargando datos…</span>
+    </div>
+  </header>
+
+  <!-- Contenido -->
+  <main class="page-content">
+
+    <!-- KPI Cards -->
+    <div class="kpi-grid" id="kpi-grid">
+
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span class="kpi-label">En Curso</span>
+          <div class="kpi-icon kpi-icon--en-curso">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="5 3 19 12 5 21 5 3"/>
+            </svg>
+          </div>
+        </div>
+        <div class="kpi-value kpi-value--en-curso" id="kpi-en-curso">—</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span class="kpi-label">Pausadas</span>
+          <div class="kpi-icon kpi-icon--pausadas">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>
+            </svg>
+          </div>
+        </div>
+        <div class="kpi-value kpi-value--pausadas" id="kpi-pausadas">—</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span class="kpi-label">Bloqueadas</span>
+          <div class="kpi-icon kpi-icon--bloqueadas">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+          </div>
+        </div>
+        <div class="kpi-value kpi-value--bloqueadas" id="kpi-bloqueadas">—</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span class="kpi-label">Próximas</span>
+          <div class="kpi-icon kpi-icon--proximas">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+        </div>
+        <div class="kpi-value kpi-value--proximas" id="kpi-proximas">—</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span class="kpi-label">Testing</span>
+          <div class="kpi-icon kpi-icon--testing">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18"/>
+            </svg>
+          </div>
+        </div>
+        <div class="kpi-value kpi-value--testing" id="kpi-testing">—</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span class="kpi-label">Terminadas</span>
+          <div class="kpi-icon kpi-icon--terminadas">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </div>
+        </div>
+        <div class="kpi-value kpi-value--terminadas" id="kpi-terminadas">—</div>
+      </div>
+
+    </div>
+
+    <!-- Sección de devs -->
+    <div class="section-header">
+      <h2 class="section-title">Desarrolladores</h2>
+      <div class="period-selector">
+        <span class="period-label">Terminadas:</span>
+        <button type="button" class="period-btn active" data-period="day">Hoy</button>
+        <button type="button" class="period-btn" data-period="week">Semana</button>
+        <button type="button" class="period-btn" data-period="month">Mes</button>
+      </div>
+    </div>
+
+    <div class="devs-grid" id="devs-grid">
+      <!-- Skeleton inicial — reemplazado por viewer.js -->
+      <div class="dev-card">
+        <div class="dev-card-body">
+          <div class="skeleton skeleton--title"></div>
+          <div class="skeleton skeleton--line-lg"></div>
+          <div class="skeleton skeleton--line-md"></div>
+        </div>
+      </div>
+      <div class="dev-card">
+        <div class="dev-card-body">
+          <div class="skeleton skeleton--title"></div>
+          <div class="skeleton skeleton--line-lg"></div>
+          <div class="skeleton skeleton--line-md"></div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="page-footer">
+  </footer>
+
+  <!-- Modal historial de tarea -->
+  <div id="task-history-modal" class="modal-overlay" hidden>
+    <div class="modal-box">
+      <button type="button" class="modal-close" id="modal-close">✕</button>
+      <div id="modal-content"></div>
+    </div>
+  </div>
+
+  <script src="js/viewer.js"></script>
+</body>
+</html>
