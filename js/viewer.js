@@ -7,16 +7,17 @@ let currentPeriod  = 'day';
 
 /* ─── Init ─────────────────────────────────────────────────── */
 async function init() {
-  await discoverAvailableDates();
-  const latest = availableDates[availableDates.length - 1];
-  if (latest) {
-    await loadLatest(latest);
-    await loadTerminadasForPeriod('day');
-  } else {
-    renderEmpty();
-  }
-
-  // Botones de período
+  // Listeners siempre se registran, independientemente de errores de carga
+  document.getElementById('kpi-terminadas-card').addEventListener('click', openTerminadasModal);
+  document.getElementById('devs-grid').addEventListener('click', e => {
+    const row = e.target.closest('.task-row[data-task-id]');
+    if (row) openTaskHistory(row.dataset.taskId);
+  });
+  document.getElementById('modal-close').addEventListener('click', closeModal);
+  document.getElementById('task-history-modal').addEventListener('click', e => {
+    if (e.target === e.currentTarget) closeModal();
+  });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
   document.querySelectorAll('.period-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
@@ -25,21 +26,14 @@ async function init() {
     });
   });
 
-  // Click en KPI terminadas → modal de terminadas
-  document.getElementById('kpi-terminadas-card').addEventListener('click', openTerminadasModal);
-
-  // Click en tarea → historial
-  document.getElementById('devs-grid').addEventListener('click', e => {
-    const row = e.target.closest('.task-row[data-task-id]');
-    if (row) openTaskHistory(row.dataset.taskId);
-  });
-
-  // Cerrar modal
-  document.getElementById('modal-close').addEventListener('click', closeModal);
-  document.getElementById('task-history-modal').addEventListener('click', e => {
-    if (e.target === e.currentTarget) closeModal();
-  });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+  await discoverAvailableDates();
+  const latest = availableDates[availableDates.length - 1];
+  if (latest) {
+    await loadLatest(latest);
+    await loadTerminadasForPeriod('day');
+  } else {
+    renderEmpty();
+  }
 }
 
 /* ─── Date discovery ─────────────────────────────────────────
