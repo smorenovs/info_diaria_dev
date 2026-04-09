@@ -581,14 +581,8 @@ body.auth-locked > *:not(#login-overlay) {
   gap: var(--space-2);
 }
 .login-logo {
-  width: 52px;
-  height: 52px;
-  border-radius: var(--radius-lg);
-  background: linear-gradient(135deg, var(--vs-cyan) 0%, var(--vs-teal) 100%);
-  color: var(--layer-1);
-  font-family: var(--font-heading);
-  font-weight: 900;
-  font-size: 20px;
+  width: 64px;
+  height: 64px;
   display: flex;
   align-items: center;
   justify-content: center;

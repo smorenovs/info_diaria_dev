@@ -40,8 +40,10 @@ function buildLoginOverlay() {
   div.id = 'login-overlay';
   div.innerHTML = `
     <div class="login-box">
-      <div class="login-logo">VS</div>
-      <div class="login-title">VS Ingeniería</div>
+      <div class="login-logo">
+        <img src="assets/media/logo_vs.png" alt="VS" class="topbar-logo-img" style="width:250px;height:250px;object-fit:contain;margin-bottom:var(--space-3);">
+      </div>
+      <div></div>
       <div class="login-subtitle">Estado del Equipo de Desarrollo</div>
       <form id="login-form" autocomplete="off">
         <div class="login-field">

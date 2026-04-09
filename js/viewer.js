@@ -370,7 +370,12 @@ async function openTaskHistory(taskId) {
     }
   }
 
-  renderTaskHistoryModal(taskId, history);
+  // Solo mostrar la primera vez que la tarea entró en cada estado (transiciones)
+  const transitions = history.filter((h, i) =>
+    i === 0 || h.status !== history[i - 1].status
+  );
+
+  renderTaskHistoryModal(taskId, transitions);
 }
 
 function renderTaskHistoryModal(taskId, history) {
