@@ -3,6 +3,7 @@
 const USERS = {
   'adrian':   '4ca8f3f82873789b65f34c3e6a1dc5e3c7bab94c2e995c45358ece778288df7a',
   'santiago': '4ca8f3f82873789b65f34c3e6a1dc5e3c7bab94c2e995c45358ece778288df7a',
+  'pablo': '4ca8f3f82873789b65f34c3e6a1dc5e3c7bab94c2e995c45358ece778288df7a'
 };
 
 const SESSION_KEY = 'vs_auth_user';
