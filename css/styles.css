@@ -659,6 +659,51 @@ body {
 .task-row { cursor: pointer; }
 .task-row:hover { background: rgba(77,200,232,0.05); border-radius: var(--radius-sm); }
 
+/* ─── KPI card clickeable ────────────────────────────────────── */
+.kpi-card--clickable {
+  cursor: pointer;
+}
+.kpi-card--clickable:hover {
+  border-color: rgba(74,222,128,0.35);
+  box-shadow: 0 0 0 1px rgba(74,222,128,0.15), var(--shadow-lg);
+}
+.kpi-card--clickable:hover .kpi-label::after {
+  content: ' ↗';
+  font-size: 10px;
+  opacity: 0.6;
+}
+
+/* ─── Modal de terminadas ────────────────────────────────────── */
+.terminadas-modal-dev {
+  margin-bottom: var(--space-5);
+}
+.terminadas-modal-dev:last-child { margin-bottom: 0; }
+
+.terminadas-modal-dev-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.terminadas-modal-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-2) 0;
+}
+.terminadas-check {
+  color: #4ADE80;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.terminadas-modal-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
 /* ─── Botón enviar a Testing ─────────────────────────────────── */
 .btn-testing {
   background: rgba(167,139,250,0.10);

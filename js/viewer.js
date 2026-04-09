@@ -25,6 +25,9 @@ async function init() {
     });
   });
 
+  // Click en KPI terminadas → modal de terminadas
+  document.getElementById('kpi-terminadas-card').addEventListener('click', openTerminadasModal);
+
   // Click en tarea → historial
   document.getElementById('devs-grid').addEventListener('click', e => {
     const row = e.target.closest('.task-row[data-task-id]');
@@ -107,20 +110,23 @@ async function loadTerminadasForPeriod(period) {
   }
 
   const results = await Promise.all(
-    datesInPeriod.map(d =>
+    datesInPeriod.map((d, i) =>
       fetch(`data/${d}.json`).then(r => r.ok ? r.json() : null).catch(() => null)
+        .then(data => ({ date: datesInPeriod[i], data }))
     )
   );
 
-  // Acumular terminadas por dev, deduplicando por id
+  // Acumular terminadas por dev, guardando fecha de terminación, deduplicando por id
   const byDev = {};
-  for (const data of results) {
+  for (const { date, data } of results) {
     if (!data) continue;
     for (const dev of data.developers || []) {
       if (!byDev[dev.name]) byDev[dev.name] = new Map();
       for (const task of dev.terminadas || []) {
         const key = task.id || task.title || JSON.stringify(task);
-        byDev[dev.name].set(key, task);
+        if (!byDev[dev.name].has(key)) {
+          byDev[dev.name].set(key, { ...task, terminatedOn: date });
+        }
       }
     }
   }
@@ -175,7 +181,6 @@ function devCardHTML(dev) {
   const bloqueadas = dev.bloqueadas  || [];
   const proximas   = dev.proximas    || [];
   const testing    = dev.testing     || [];
-  const terminadas = terminadasByDev[dev.name] || [];
   const activeCount = enCurso.length + pausadas.length + bloqueadas.length + testing.length;
 
   let body = '';
@@ -202,9 +207,6 @@ function devCardHTML(dev) {
   }
   if (testing.length > 0) {
     body += taskGroupHTML('Testing', 'testing', testing.map(t => taskRowHTML(t)));
-  }
-  if (terminadas.length > 0) {
-    body += taskGroupHTML('Terminadas', 'terminadas', terminadas.map(t => taskRowHTML(t)));
   }
 
   if (!body) {
@@ -413,6 +415,63 @@ function renderTaskHistoryModal(taskId, history) {
       <span class="modal-task-title">${escHtml(title)}</span>
     </div>
     <div class="timeline">${events}</div>
+  `);
+}
+
+function openTerminadasModal() {
+  const PERIOD_LABEL = { day: 'Hoy', week: 'Esta semana', month: 'Este mes' };
+  const devNames = Object.keys(terminadasByDev).filter(n => terminadasByDev[n].length > 0);
+
+  if (devNames.length === 0) {
+    showModal(`
+      <div style="text-align:center;padding:var(--space-5);color:var(--vs-gray-mid);">
+        <div style="font-size:14px;font-weight:600;margin-bottom:8px;">Sin tareas finalizadas</div>
+        <div style="font-size:12px;">No hay terminadas para el período seleccionado.</div>
+      </div>`);
+    return;
+  }
+
+  const sections = devNames.map(name => {
+    const tasks = terminadasByDev[name];
+    const rows = tasks.map(t => {
+      const idLabel = /^TAREA\s/i.test(t.id || '') ? t.id : (t.id ? `#${t.id}` : '');
+      const dateLabel = t.terminatedOn ? `<span class="timeline-date">${formatDateLabel(t.terminatedOn)}</span>` : '';
+      const tagHtml = t.tag ? `<span class="task-tag">${escHtml(t.tag)}</span>` : '';
+      return `
+        <div class="terminadas-modal-row">
+          <svg class="terminadas-check" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          <div class="terminadas-modal-info">
+            <div class="task-main">
+              ${idLabel ? `<span class="task-id">${escHtml(idLabel)}</span>` : ''}
+              <span class="task-title">${escHtml(t.title)}</span>
+              ${tagHtml}
+            </div>
+            ${dateLabel}
+          </div>
+        </div>`;
+    }).join('');
+
+    const initials = name.slice(0, 2).toUpperCase();
+    return `
+      <div class="terminadas-modal-dev">
+        <div class="terminadas-modal-dev-header">
+          <div class="dev-avatar" style="width:28px;height:28px;font-size:10px;">${escHtml(initials)}</div>
+          <span class="dev-name" style="font-size:13px;">${escHtml(name)}</span>
+          <span class="timeline-date">${tasks.length} tarea${tasks.length !== 1 ? 's' : ''}</span>
+        </div>
+        ${rows}
+      </div>`;
+  }).join('');
+
+  showModal(`
+    <div class="modal-task-header">
+      <span class="task-group-label terminadas" style="font-size:14px;">Terminadas</span>
+      <span class="timeline-date">${PERIOD_LABEL[currentPeriod] || ''}</span>
+    </div>
+    ${sections}
   `);
 }
 
