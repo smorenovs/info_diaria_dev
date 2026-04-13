@@ -108,12 +108,7 @@
     },
     {
       "name": "MARIANO",
-      "en_curso": [
-        {
-          "id": "TAREA 458",
-          "title": "Actualización de Precios - (Costo de Reposic.)"
-        }
-      ],
+      "en_curso": [],
       "pausadas": [
         {
           "id": "TAREA 64",
