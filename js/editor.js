@@ -70,37 +70,94 @@ async function connectFolder() {
 
 /* ─── Recuperar tareas de ayer ──────────────────────────────── */
 async function recoverYesterday() {
-  const prev = prevDayStr(document.getElementById('date-input').value);
+  const selectedDate = document.getElementById('date-input').value;
+  const prev = prevDayStr(selectedDate);
 
-  // Intento 1: fetch HTTP (funciona desde servidor local o GitHub Pages)
-  try {
-    const res = await fetch(`data/${prev}.json`);
-    if (res.ok) {
-      const data = await res.json();
-      state.developers = data.developers || [];
-      renderForm();
-      updatePreview();
-      toast(`Tareas del ${prev} recuperadas`, 'success');
-      return;
-    }
-  } catch {}
+  // Intentar cargar el día anterior
+  const data = await tryLoadDateJSON(prev);
+  if (data) { applyRecoveredData(data, prev); return; }
 
-  // Intento 2: File System API (requiere carpeta conectada)
-  if (!dirHandle) {
-    toast('Conectá la carpeta para recuperar datos sin servidor', 'error');
+  // No encontrado — buscar el archivo más reciente disponible antes de la fecha seleccionada
+  const recentDate = await findMostRecentBefore(selectedDate);
+  if (!recentDate) {
+    toast('No se encontró ningún archivo anterior disponible', 'error');
     return;
   }
+
+  showRecoverConfirm(recentDate);
+}
+
+async function tryLoadDateJSON(date) {
+  // Intento 1: fetch HTTP
   try {
-    const fileHandle = await dirHandle.getFileHandle(`${prev}.json`);
-    const file = await fileHandle.getFile();
-    const data = JSON.parse(await file.text());
-    state.developers = data.developers || [];
-    renderForm();
-    updatePreview();
-    toast(`Tareas del ${prev} recuperadas`, 'success');
-  } catch {
-    toast(`No se encontró el archivo ${prev}.json`, 'error');
+    const res = await fetch(`data/${date}.json`);
+    if (res.ok) return await res.json();
+  } catch {}
+  // Intento 2: File System API
+  if (!dirHandle) return null;
+  try {
+    const fh = await dirHandle.getFileHandle(`${date}.json`);
+    return JSON.parse(await (await fh.getFile()).text());
+  } catch {}
+  return null;
+}
+
+async function findMostRecentBefore(beforeDate) {
+  let dates = [];
+  // Intentar leer index.json por HTTP
+  try {
+    const res = await fetch('data/index.json');
+    if (res.ok) { const idx = await res.json(); dates = idx.dates || []; }
+  } catch {}
+  // Intentar leer index.json por File System API
+  if (dates.length === 0 && dirHandle) {
+    try {
+      const fh = await dirHandle.getFileHandle('index.json');
+      const idx = JSON.parse(await (await fh.getFile()).text());
+      dates = idx.dates || [];
+    } catch {}
   }
+  const earlier = dates.filter(d => d < beforeDate).sort();
+  return earlier.length > 0 ? earlier[earlier.length - 1] : null;
+}
+
+function applyRecoveredData(data, date) {
+  state.developers = data.developers || [];
+  renderForm();
+  updatePreview();
+  toast(`Tareas del ${date} recuperadas`, 'success');
+}
+
+function showRecoverConfirm(date) {
+  // Eliminar cualquier confirmación previa
+  document.getElementById('recover-confirm')?.remove();
+
+  const bar = document.createElement('div');
+  bar.id = 'recover-confirm';
+  bar.className = 'recover-confirm-bar';
+  bar.innerHTML = `
+    <span class="recover-confirm-msg">
+      No se encontró el archivo del día anterior.
+      El registro más reciente es <strong>${date}</strong>.
+      ¿Querés usarlo como base?
+    </span>
+    <div class="recover-confirm-actions">
+      <button type="button" class="btn btn-primary btn-sm" id="recover-confirm-yes">Sí, cargar</button>
+      <button type="button" class="btn btn-ghost btn-sm" id="recover-confirm-no">Cancelar</button>
+    </div>`;
+
+  // Insertar antes del formulario de devs
+  const form = document.getElementById('devs-form');
+  form.parentNode.insertBefore(bar, form);
+
+  document.getElementById('recover-confirm-yes').addEventListener('click', async () => {
+    bar.remove();
+    const data = await tryLoadDateJSON(date);
+    if (data) { applyRecoveredData(data, date); }
+    else { toast(`No se pudo cargar el archivo ${date}.json`, 'error'); }
+  });
+
+  document.getElementById('recover-confirm-no').addEventListener('click', () => bar.remove());
 }
 
 /* ─── Guardar JSON ──────────────────────────────────────────── */
