@@ -77,7 +77,7 @@ async function init() {
 ──────────────────────────────────────────────────────────── */
 async function discoverAvailableDates() {
   try {
-    const res = await fetch('data/index.json');
+    const res = await fetch('data/index.json', { cache: 'no-store' });
     if (res.ok) {
       const idx = await res.json();
       availableDates = (idx.dates || []).sort();
