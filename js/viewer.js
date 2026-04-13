@@ -20,10 +20,44 @@ async function init() {
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
   document.querySelectorAll('.period-btn').forEach(btn => {
     btn.addEventListener('click', () => {
+      // Limpiar fechas al elegir un período predefinido
+      document.getElementById('filter-from').value = '';
+      document.getElementById('filter-to').value = '';
       document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       loadTerminadasForPeriod(btn.dataset.period);
     });
+  });
+
+  // Filtro por rango de fechas
+  const filterFrom = document.getElementById('filter-from');
+  const filterTo   = document.getElementById('filter-to');
+  const filterClear = document.getElementById('filter-clear');
+
+  function applyDateFilter() {
+    const from = filterFrom.value;
+    const to   = filterTo.value;
+    if (from || to) {
+      // Desactivar botones de período cuando hay fechas
+      document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+      loadTerminadasForDateRange(from || null, to || null);
+    } else {
+      // Sin fechas: volver al período activo
+      const active = document.querySelector('.period-btn.active');
+      if (active) loadTerminadasForPeriod(active.dataset.period);
+    }
+  }
+
+  filterFrom.addEventListener('change', applyDateFilter);
+  filterTo.addEventListener('change', applyDateFilter);
+
+  filterClear.addEventListener('click', () => {
+    filterFrom.value = '';
+    filterTo.value   = '';
+    // Reactivar "Hoy" por defecto
+    document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector('.period-btn[data-period="day"]').classList.add('active');
+    loadTerminadasForPeriod('day');
   });
 
   await discoverAvailableDates();
@@ -88,19 +122,26 @@ async function loadLatest(date) {
 /* ─── Load terminadas por período ───────────────────────────── */
 async function loadTerminadasForPeriod(period) {
   currentPeriod = period;
-  const latest = availableDates[availableDates.length - 1];
-  if (!latest) return;
+
+  const today = new Date();
+  const todayIso = dateStr(today);
 
   let datesInPeriod;
   if (period === 'day') {
-    datesInPeriod = [latest];
+    // Solo si existe un JSON para hoy
+    datesInPeriod = availableDates.filter(d => d === todayIso);
+  } else if (period === 'week') {
+    // Desde el lunes de esta semana hasta hoy
+    const dow = today.getDay(); // 0=Dom, 1=Lun, …
+    const daysFromMonday = dow === 0 ? 6 : dow - 1;
+    const monday = new Date(today);
+    monday.setDate(today.getDate() - daysFromMonday);
+    const mondayIso = dateStr(monday);
+    datesInPeriod = availableDates.filter(d => d >= mondayIso && d <= todayIso);
   } else {
-    const cutoffDays = period === 'week' ? 7 : 30;
-    const latestDate = new Date(latest + 'T12:00:00');
-    datesInPeriod = availableDates.filter(d => {
-      const dd = new Date(d + 'T12:00:00');
-      return (latestDate - dd) / 86400000 <= cutoffDays;
-    });
+    // Mes: desde el 1° del mes actual hasta hoy
+    const firstOfMonth = todayIso.slice(0, 7) + '-01';
+    datesInPeriod = availableDates.filter(d => d >= firstOfMonth && d <= todayIso);
   }
 
   const results = await Promise.all(
@@ -111,6 +152,45 @@ async function loadTerminadasForPeriod(period) {
   );
 
   // Acumular terminadas por dev, guardando fecha de terminación, deduplicando por id
+  const byDev = {};
+  for (const { date, data } of results) {
+    if (!data) continue;
+    for (const dev of data.developers || []) {
+      if (!byDev[dev.name]) byDev[dev.name] = new Map();
+      for (const task of dev.terminadas || []) {
+        const key = task.id || task.title || JSON.stringify(task);
+        if (!byDev[dev.name].has(key)) {
+          byDev[dev.name].set(key, { ...task, terminatedOn: date });
+        }
+      }
+    }
+  }
+  terminadasByDev = {};
+  for (const name of Object.keys(byDev)) {
+    terminadasByDev[name] = Array.from(byDev[name].values());
+  }
+
+  renderTerminadasKPI();
+  renderDevs();
+}
+
+/* ─── Load terminadas por rango de fechas ───────────────────── */
+async function loadTerminadasForDateRange(from, to) {
+  const todayIso = dateStr(new Date());
+  const effectiveFrom = from || availableDates[0] || todayIso;
+  const effectiveTo   = to   || todayIso;
+
+  const datesInPeriod = availableDates.filter(d =>
+    d >= effectiveFrom && d <= effectiveTo
+  );
+
+  const results = await Promise.all(
+    datesInPeriod.map((d, i) =>
+      fetch(`data/${d}.json`).then(r => r.ok ? r.json() : null).catch(() => null)
+        .then(data => ({ date: datesInPeriod[i], data }))
+    )
+  );
+
   const byDev = {};
   for (const { date, data } of results) {
     if (!data) continue;
@@ -419,6 +499,11 @@ function renderTaskHistoryModal(taskId, history) {
 
 function openTerminadasModal() {
   const PERIOD_LABEL = { day: 'Hoy', week: 'Esta semana', month: 'Este mes' };
+  const from = document.getElementById('filter-from')?.value;
+  const to   = document.getElementById('filter-to')?.value;
+  const periodLabel = (from || to)
+    ? [from && formatDateLabel(from), to && formatDateLabel(to)].filter(Boolean).join(' → ')
+    : (PERIOD_LABEL[currentPeriod] || '');
   const devNames = Object.keys(terminadasByDev).filter(n => terminadasByDev[n].length > 0);
 
   if (devNames.length === 0) {
@@ -468,7 +553,7 @@ function openTerminadasModal() {
   showModal(`
     <div class="modal-task-header">
       <span class="task-group-label terminadas" style="font-size:14px;">Terminadas</span>
-      <span class="timeline-date">${PERIOD_LABEL[currentPeriod] || ''}</span>
+      <span class="timeline-date">${periodLabel}</span>
     </div>
     ${sections}
   `);

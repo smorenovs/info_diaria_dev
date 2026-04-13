@@ -245,6 +245,36 @@ body {
   color: #4ADE80;
 }
 
+/* ─── Filtro de fechas de terminadas ─────────────────────────── */
+.period-separator {
+  width: 1px;
+  height: 16px;
+  background: rgba(255,255,255,0.10);
+  margin: 0 var(--space-1);
+}
+.period-date-input {
+  padding: 3px 8px;
+  font-size: 12px;
+  width: 130px;
+  color-scheme: dark;
+}
+.period-clear-btn {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.10);
+  color: var(--vs-gray-mid);
+  border-radius: var(--radius-full);
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+  flex-shrink: 0;
+}
+.period-clear-btn:hover { border-color: #F87171; color: #F87171; }
+
 /* ─── Fecha en topbar ────────────────────────────────────────── */
 .topbar-date-label {
   font-size: 12px;

@@ -1,5 +1,5 @@
 {
-  "date": "2026-04-09",
+  "date": "2026-04-13",
   "developers": [
     {
       "name": "AGUSTIN",
@@ -108,7 +108,12 @@
     },
     {
       "name": "MARIANO",
-      "en_curso": [],
+      "en_curso": [
+        {
+          "id": "TAREA 458",
+          "title": "Actualización de Precios - (Costo de Reposic.)"
+        }
+      ],
       "pausadas": [
         {
           "id": "TAREA 64",
@@ -190,12 +195,7 @@
           "title": "Datos incompletos en la carga diaria de datos al BI"
         }
       ],
-      "terminadas": [
-        {
-          "id": "TAREA 450",
-          "title": "Mostrar dtos. en ventas de unidades en Zafiro BI"
-        }
-      ]
+      "terminadas": []
     },
     {
       "name": "PABLO",
