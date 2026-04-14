@@ -17,6 +17,7 @@ function editorInit() {
 
   // Iniciar con devs vacíos (plantilla)
   loadTemplate();
+  bindFormEvents(); // registrar una sola vez — antes era llamado dentro de renderForm(), causando duplicados
   updatePreview();
 }
 
@@ -208,7 +209,6 @@ function buildStateFromForm() {
   const devEls = document.querySelectorAll('.dev-block');
   const developers = [];
   devEls.forEach(block => {
-    const devIndex = Number(block.dataset.dev);
     const name = block.querySelector('.dev-name-input').value.trim().toUpperCase();
     developers.push({
       name,
@@ -251,7 +251,6 @@ function renderForm() {
   state.developers.forEach((dev, i) => {
     container.appendChild(buildDevBlock(dev, i));
   });
-  bindFormEvents();
   updatePreview();
 }
 
@@ -331,7 +330,8 @@ function taskInputRow(section, task = {}, hasReason = false) {
       ${moveOptions}
     </select>`;
   return `
-    <div class="task-input-row" data-section="${section}">
+    <div class="task-input-row" data-section="${section}" draggable="true">
+      <span class="drag-handle" title="Arrastrar para reordenar">⠿</span>
       <input class="input ti-id" type="text" inputmode="numeric" value="${escHtml(displayId)}"
              placeholder="100" style="width:72px;" title="Número de tarea (se agrega TAREA automáticamente)">
       <input class="input ti-title" type="text" value="${escHtml(task.title || '')}" placeholder="Título de la tarea" style="flex:3;">
@@ -400,6 +400,55 @@ function bindFormEvents() {
   });
 
   container.addEventListener('input', debouncedPreview);
+
+  /* ─── Drag & Drop para reordenar tareas ──────────────────────── */
+  let dragSrcRow = null;
+  let dragFromHandle = false;
+
+  container.addEventListener('mousedown', e => {
+    dragFromHandle = !!e.target.closest('.drag-handle');
+  });
+
+  container.addEventListener('dragstart', e => {
+    if (!dragFromHandle) { e.preventDefault(); return; }
+    const row = e.target.closest('.task-input-row');
+    if (!row) return;
+    dragSrcRow = row;
+    dragSrcRow.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', '');
+  });
+
+  container.addEventListener('dragover', e => {
+    if (!dragSrcRow) return;
+    const targetRow = e.target.closest('.task-input-row');
+    if (targetRow && targetRow !== dragSrcRow && targetRow.parentElement === dragSrcRow.parentElement) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      container.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+      targetRow.classList.add('drag-over');
+    }
+  });
+
+  container.addEventListener('drop', e => {
+    if (!dragSrcRow) return;
+    const targetRow = e.target.closest('.task-input-row');
+    if (!targetRow || targetRow === dragSrcRow || targetRow.parentElement !== dragSrcRow.parentElement) return;
+    e.preventDefault();
+    const children = [...targetRow.parentElement.children];
+    const srcIdx = children.indexOf(dragSrcRow);
+    const tgtIdx = children.indexOf(targetRow);
+    if (srcIdx < tgtIdx) targetRow.after(dragSrcRow);
+    else targetRow.before(dragSrcRow);
+    debouncedPreview();
+  });
+
+  container.addEventListener('dragend', () => {
+    if (dragSrcRow) dragSrcRow.classList.remove('dragging');
+    container.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+    dragSrcRow = null;
+    dragFromHandle = false;
+  });
 }
 
 function addDeveloper() {

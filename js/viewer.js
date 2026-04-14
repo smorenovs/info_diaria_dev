@@ -4,14 +4,15 @@ let latestData     = null;   // datos del día más reciente (tareas activas)
 let availableDates = [];
 let terminadasByDev = {};    // { devName: task[] } agregado del período
 let currentPeriod  = 'day';
+let daysInStateMap = {};     // { taskId.toUpperCase(): N } días en estado actual
 
 /* ─── Init ─────────────────────────────────────────────────── */
 async function init() {
   // Listeners siempre se registran, independientemente de errores de carga
   document.getElementById('kpi-terminadas-card').addEventListener('click', openTerminadasModal);
   document.getElementById('devs-grid').addEventListener('click', e => {
-    const row = e.target.closest('.task-row[data-task-id]');
-    if (row) openTaskHistory(row.dataset.taskId);
+    const el = e.target.closest('[data-task-id]');
+    if (el) openTaskHistory(el.dataset.taskId);
   });
   document.getElementById('modal-close').addEventListener('click', closeModal);
   document.getElementById('task-history-modal').addEventListener('click', e => {
@@ -65,6 +66,7 @@ async function init() {
   if (latest) {
     await loadLatest(latest);
     await loadTerminadasForPeriod('day');
+    computeDaysInState(); // async, re-renderiza cuando termina
   } else {
     renderEmpty();
   }
@@ -271,7 +273,7 @@ function devCardHTML(dev) {
   if (proximas.length > 0) {
     const pills = proximas.map(t => {
       const lbl = /^TAREA\s/i.test(t.id || '') ? t.id : `#${t.id}`;
-      return `<span class="pill-id" title="${escHtml(t.title)}">${escHtml(lbl)}</span>`;
+      return `<span class="pill-id" data-task-id="${escHtml(t.id || '')}" title="${escHtml(t.title)}">${escHtml(lbl)}</span>`;
     }).join('');
     body += `
       <div class="task-group">
@@ -318,12 +320,17 @@ function taskRowHTML(task, showReason = false) {
   const idLabel = /^TAREA\s/i.test(task.id || '')
     ? task.id
     : (task.id ? `#${task.id}` : '');
+  const days = task.id ? daysInStateMap[(task.id).toUpperCase()] : null;
+  const daysHtml = days != null
+    ? `<span class="task-days" title="${days === 1 ? 'Desde hoy' : `Hace ${days} días`}">${days}d</span>`
+    : '';
   return `
     <div class="task-row" data-task-id="${escHtml(task.id || '')}" title="Ver historial de esta tarea">
       <div class="task-main">
         ${idLabel ? `<span class="task-id">${escHtml(idLabel)}</span>` : ''}
         <span class="task-title">${escHtml(task.title)}</span>
         ${tagHtml}
+        ${daysHtml}
       </div>
       ${reasonHtml}
     </div>`;
@@ -408,6 +415,65 @@ function escHtml(str) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
+}
+
+/* ─── Días en estado actual ──────────────────────────────────── */
+const ACTIVE_SECTIONS = ['en_curso', 'pausadas', 'bloqueadas', 'testing'];
+
+async function computeDaysInState() {
+  if (!latestData || availableDates.length === 0) return;
+
+  // taskId → sección actual en los datos más recientes
+  const taskCurrentSection = {};
+  for (const dev of latestData.developers || []) {
+    for (const section of ACTIVE_SECTIONS) {
+      for (const task of dev[section] || []) {
+        if (task.id) taskCurrentSection[task.id.toUpperCase()] = section;
+      }
+    }
+  }
+  if (Object.keys(taskCurrentSection).length === 0) return;
+
+  // Cargar todos los JSONs de golpe
+  const results = await Promise.all(
+    availableDates.map(d =>
+      fetch(`data/${d}.json`).then(r => r.ok ? r.json() : null).catch(() => null)
+    )
+  );
+
+  const today = new Date();
+  daysInStateMap = {};
+
+  for (const [taskId, currentSection] of Object.entries(taskCurrentSection)) {
+    let sinceIdx = availableDates.length - 1; // empezar desde el más reciente
+
+    // Ir hacia atrás buscando la racha consecutiva en el mismo estado
+    for (let i = availableDates.length - 2; i >= 0; i--) {
+      const data = results[i];
+      if (!data) continue; // sin archivo para esa fecha — ignorar el hueco
+
+      let foundInSameSection = false;
+      for (const dev of data.developers || []) {
+        if ((dev[currentSection] || []).some(t => (t.id || '').toUpperCase() === taskId)) {
+          foundInSameSection = true;
+          break;
+        }
+      }
+
+      if (foundInSameSection) {
+        sinceIdx = i;
+      } else {
+        break; // cambió de estado o no existía — cortar la racha
+      }
+    }
+
+    const [sy, sm, sd] = availableDates[sinceIdx].split('-').map(Number);
+    const since = new Date(sy, sm - 1, sd);
+    const diffDays = Math.round((today - since) / (1000 * 60 * 60 * 24));
+    daysInStateMap[taskId] = Math.max(1, diffDays + 1);
+  }
+
+  renderDevs(); // actualizar cards con los badges de días
 }
 
 /* ─── Historial de tarea ─────────────────────────────────────── */

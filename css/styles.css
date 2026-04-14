@@ -455,7 +455,7 @@ body {
   border: 1px solid rgba(176,190,197,0.18);
   padding: 3px 10px;
   border-radius: var(--radius-full);
-  cursor: default;
+  cursor: pointer;
   transition: background 0.15s;
 }
 
@@ -758,6 +758,38 @@ body.auth-locked > *:not(#login-overlay) {
 /* task-row clickeable */
 .task-row { cursor: pointer; }
 .task-row:hover { background: rgba(77,200,232,0.05); border-radius: var(--radius-sm); }
+
+/* ─── Badge de días en estado (viewer) ──────────────────────── */
+.task-days {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--vs-gray-dark);
+  background: rgba(255,255,255,0.06);
+  padding: 1px 6px;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+/* ─── Drag & Drop (editor) ───────────────────────────────────── */
+.drag-handle {
+  cursor: grab;
+  color: var(--vs-gray-dark);
+  font-size: 14px;
+  line-height: 1;
+  padding: 0 4px;
+  flex-shrink: 0;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.drag-handle:active { cursor: grabbing; }
+.task-input-row.dragging { opacity: 0.35; }
+.task-input-row.drag-over {
+  outline: 2px dashed var(--vs-cyan);
+  border-radius: var(--radius-sm);
+  background: rgba(77,200,232,0.05);
+}
 
 /* ─── KPI card clickeable ────────────────────────────────────── */
 .kpi-card--clickable {
