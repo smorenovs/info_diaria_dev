@@ -763,8 +763,8 @@ body.auth-locked > *:not(#login-overlay) {
 .task-days {
   font-size: 10px;
   font-weight: 600;
-  color: var(--vs-gray-dark);
-  background: rgba(41, 40, 40, 0.473);
+  color: var(--layer-0);
+  background: rgba(255,255,255,0.2);
   padding: 1px 6px;
   border-radius: var(--radius-full);
   white-space: nowrap;
