@@ -764,7 +764,7 @@ body.auth-locked > *:not(#login-overlay) {
   font-size: 10px;
   font-weight: 600;
   color: var(--vs-gray-dark);
-  background: rgba(255,255,255,0.2);
+  background: rgba(41, 40, 40, 0.473);
   padding: 1px 6px;
   border-radius: var(--radius-full);
   white-space: nowrap;
