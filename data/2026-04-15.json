@@ -24,24 +24,24 @@
       ],
       "testing": [
         {
-          "id": "TAREA 241",
-          "title": "CMC - ABM Masivo Nomencladores"
-        },
-        {
           "id": "TAREA 231",
           "title": "Zafiro Validadores"
         },
         {
-          "id": "TAREA 238",
-          "title": "CMC - ABM Nomencladores normal"
+          "id": "TAREA 247",
+          "title": "Laboratorios mal asignados en AlfaBeta"
         },
         {
           "id": "TAREA 452",
           "title": "Mejora de Mensajes en Actualización de Precios AlfaBeta"
         },
         {
-          "id": "TAREA 247",
-          "title": "Laboratorios mal asignados en AlfaBeta"
+          "id": "TAREA 241",
+          "title": "CMC - ABM Masivo Nomencladores"
+        },
+        {
+          "id": "TAREA 238",
+          "title": "CMC - ABM Nomencladores normal"
         }
       ],
       "terminadas": []
@@ -108,12 +108,7 @@
     },
     {
       "name": "MARIANO",
-      "en_curso": [
-        {
-          "id": "TAREA 458",
-          "title": "Actualización de Precios - (Costo de Reposic.)"
-        }
-      ],
+      "en_curso": [],
       "pausadas": [
         {
           "id": "TAREA 64",
@@ -148,7 +143,20 @@
         }
       ],
       "testing": [],
-      "terminadas": []
+      "terminadas": [
+        {
+          "id": "TAREA 474",
+          "title": "Error logico en Ingreso de Comprobantes de Compras"
+        },
+        {
+          "id": "TAREA 475",
+          "title": "Mejoras en Reporte de Comprobantes de Envios"
+        },
+        {
+          "id": "TAREA 458",
+          "title": "Actualización de Precios - (Costo de Reposic.)"
+        }
+      ]
     },
     {
       "name": "MAURICIO",
@@ -167,7 +175,7 @@
         {
           "id": "TAREA 273",
           "title": "BI - Resumen Ventas-Stock",
-          "reason": "Dependencia directa c|on TAREA 379"
+          "reason": "Dependencia directa con TAREA 379"
         }
       ],
       "proximas": [
