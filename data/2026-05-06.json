@@ -1,5 +1,5 @@
 {
-  "date": "2026-05-04",
+  "date": "2026-05-06",
   "developers": [
     {
       "name": "AGUSTIN",
@@ -132,12 +132,8 @@
       "name": "MARIANO",
       "en_curso": [
         {
-          "id": "TAREA 531",
-          "title": "Pedidos Centralizados - Impacto de promociones en Regresión Lineal"
-        },
-        {
-          "id": "TAREA 540",
-          "title": "Error en Imprtacion de Condiciones Comerciales"
+          "id": "TAREA 476",
+          "title": "[ADM-0426_1] - Resumen de Comprobantes por Proveedor"
         }
       ],
       "pausadas": [
@@ -145,6 +141,11 @@
           "id": "TAREA 64",
           "title": "Compra Inteligente Multiproveedor Etapa 1",
           "reason": "Muy larga, se priorizan otras tareas"
+        },
+        {
+          "id": "TAREA 531",
+          "title": "Pedidos Centralizados - Impacto de promociones en Regresión Lineal",
+          "reason": "Cambio de prioridades. Retomar luego de terminar lo de Arizabalo."
         }
       ],
       "bloqueadas": [
@@ -154,11 +155,6 @@
           "reason": ""
         },
         {
-          "id": "TAREA 75",
-          "title": "Reporte de Cantidad de Comprobantes por dia y hora",
-          "reason": "Se necesita una VPN con La Pirgua"
-        },
-        {
           "id": "TAREA 211",
           "title": "Z568 - Bloqueo para Pedidos",
           "reason": ""
@@ -166,31 +162,46 @@
       ],
       "proximas": [
         {
-          "id": "TAREA 321",
-          "title": "Pedidos Centralizados - DUN 14"
+          "id": "TAREA 480",
+          "title": "[ADM-0426_1] - Modificar fecha de cierre de presentación de entidad convenio"
+        },
+        {
+          "id": "TAREA 424",
+          "title": "Error al momento de emitir un reporte de resumen de cuentas entidad convenio"
+        },
+        {
+          "id": "TAREA 423",
+          "title": "Apaisar texto formato 8 de cenefas"
         },
         {
           "id": "TAREA 453",
           "title": "Error en Cuenta Corriente"
-        },
-        {
-          "id": "TAREA 476",
-          "title": "[ADM-0426_1] - Resumen de Comprobantes por Proveedor"
-        },
-        {
-          "id": "TAREA 480",
-          "title": "[ADM-0426_1] - Modificar fecha de cierre de presentación de entidad convenio"
         }
       ],
-      "testing": [],
-      "terminadas": []
+      "testing": [
+        {
+          "id": "TAREA 321",
+          "title": "Pedidos Centralizados - DUN 14"
+        }
+      ],
+      "terminadas": [
+        {
+          "id": "TAREA 75",
+          "title": "Reporte de Cantidad de Comprobantes por dia y hora",
+          "tag": "N/A"
+        },
+        {
+          "id": "TAREA 540",
+          "title": "Error en Imprtacion de Condiciones Comerciales"
+        }
+      ]
     },
     {
       "name": "MAURICIO",
       "en_curso": [
         {
-          "id": "TAREA 273",
-          "title": "BI - Resumen Ventas-Stock"
+          "id": "TAREA 542",
+          "title": "Ajustes en la plantilla de Reporte Josefina - Qlik Sense"
         }
       ],
       "pausadas": [],
@@ -215,7 +226,12 @@
           "title": "ABM de Obras Sociales"
         }
       ],
-      "terminadas": []
+      "terminadas": [
+        {
+          "id": "TAREA 273",
+          "title": "BI - Resumen Ventas-Stock"
+        }
+      ]
     },
     {
       "name": "PABLO",
@@ -235,6 +251,22 @@
         {
           "id": "TAREA 527",
           "title": "Error de Versión - Pérdida de Preventas"
+        },
+        {
+          "id": "TAREA 533",
+          "title": "Duplicación de Entidad de Pago en Caja"
+        },
+        {
+          "id": "TAREA 534",
+          "title": "Conflicto de Credenciales en Redireccionamiento de Preventas"
+        },
+        {
+          "id": "TAREA 535",
+          "title": "Error en Refacturación/EC de Comprobantes con Bonos"
+        },
+        {
+          "id": "TAREA 536",
+          "title": "Persistencia de Datos de Clientes Fidelizados"
         },
         {
           "id": "TAREA 466",
@@ -270,8 +302,7 @@
       "en_curso": [
         {
           "id": "TAREA 470",
-          "title": "Web de Capacitaciones",
-          "reason": ""
+          "title": "Web de Capacitaciones"
         }
       ],
       "pausadas": [],
